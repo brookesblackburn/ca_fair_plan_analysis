@@ -1,0 +1,117 @@
+%load_ext google.colab.data_table
+
+# Brookes Heil-Blackburn
+## Personal Review of Structure Damage During Eaton Fire
+Data was downloaded from CalFire Website.
+
+
+import numpy as np
+import folium
+import csv
+import pandas as pd
+
+#'/content/sample_data/POSTFIRE_MASTER_DATA_SHARE_EATON.csv'
+filename = '/content/sample_data/POSTFIRE_MASTER_DATA_SHARE_EATON.csv'
+structures = pd.read_csv(filename, encoding="utf-8-sig", sep=",", index_col='OBJECTID')
+structures.columns = structures.columns.str.replace('*', '', regex=False)
+structures.columns = structures.columns.str.strip()
+structures = structures.rename(columns =({' Street Name': 'Street_Name',
+                                          ' Street Type (e.g. road, drive, lane, etc.)': 'Street_Type',
+                                          'Street Suffix (e.g. apt. 23, blding C)': 'Street_Suffix',
+                                          'Site Address (parcel)':'Site_Address',
+                                          'Assessed Improved Value (parcel)':'Assessed_improved_value',
+                                          'Structure Category': 'Structure_Category'}))
+# structures.head()
+# structures.info()
+
+
+# structures.info()
+df = structures[['Damage', 'Structure_Category', 'Assessed_improved_value', 'Site_Address', 'Latitude', 'Longitude']]
+# , ['Assessed_improved_value '], ['Site_Address'], ['Latitude'], ['Longitude']
+# df.head()
+
+destroyed = df[df['Damage'] == 'Destroyed (>50%)']
+map_center = [destroyed['Latitude'].mean(), destroyed['Longitude'].mean()]
+eaton_map = folium.Map(location=map_center, zoom_start=10)
+
+# Add markers for each structure
+for index, row in destroyed.iterrows():
+    folium.CircleMarker(
+        location=[row['Latitude'], row['Longitude']],
+        radius=5,
+        color='darkred',
+        weight=1,
+        fill=True,
+        fill_color='red',
+        fill_opacity=0.5,
+         popup=f"{row['Site_Address']}<br>Value: ${row['Assessed_improved_value']:,.0f}"
+    ).add_to(eaton_map)
+
+title_html = '''
+             <div style="position: fixed;
+                         top: 10px;
+                         left: 50px;
+                         width: 300px;
+                         height: 40px;
+                         background-color: white;
+                         border: 2px solid grey;
+                         z-index: 9999;
+                         font-size: 16px;
+                         text-align: center;
+                         padding: 10px;
+                         ">
+             <b>Eaton Fire - (>50% Destroyed)</b>
+             </div>
+             '''
+
+eaton_map.get_root().html.add_child(folium.Element(title_html))
+eaton_map.save("eaton-map.html")
+
+eaton_map
+
+# map = folium.Map(width=500,height=500,location=[df['Latitude'].mean(), df['Longitude'].mean()], zoom_start=4)
+# map
+# # Add markers for each city
+# for index, row in df.iterrows():
+#     folium.Marker(
+#         location=[df['Latitude'].mean(), df['Longitude'].mean()],
+#         popup=row['Site_Address']
+#     ).add_to(map)
+
+# Total structures
+print(f"Total structures: {len(df)}")
+
+# Destroyed structures
+destroyed = df[df['Damage'] == 'Destroyed (>50%)']
+print(f"Destroyed (>50%): {len(destroyed)}")
+
+# Total value destroyed
+total_value = destroyed['Assessed_improved_value'].sum()
+print(f"Total value: ${total_value:,.0f}")
+
+df['Damage'].unique()
+
+df['Structure_Category'].unique()
+
+print("=== EATON STRUCTURE BREAKDOWN ===\n")
+
+categories = ['Single Residence', 'Multiple Residence', 'Other Minor Structure',
+              'Nonresidential Commercial', 'Infrastructure', 'Mixed Commercial/Residential']
+
+for cat in categories:
+    subset = df[df['Structure_Category'] == cat]
+    print(f"{cat}:")
+    print(f"  Total: {len(subset)}")
+    print(f"  Destroyed: {(subset['Damage'] == 'Destroyed (>50%)').sum()}")
+    print(f"  Affected (1-9%): {(subset['Damage'] == 'Affected (1-9%)').sum()}")
+    print(f"  No Damage: {(subset['Damage'] == 'No Damage').sum()}")
+    print(f"  Minor (10-25%): {(subset['Damage'] == 'Minor (10-25%)').sum()}")
+    print(f"  Major (26-50%): {(subset['Damage'] == 'Major (26-50%)').sum()}")
+    print(f"  Total value: ${subset['Assessed_improved_value'].sum():,.0f}")
+    print()
+
+print("="*50)
+print(f"\nTOTAL ALL STRUCTURES: {len(df)}")
+print(f"TOTAL VALUE: ${df['Assessed_improved_value'].sum():,.0f}")
+
+
