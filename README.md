@@ -30,8 +30,8 @@ The California FAIR Plan is the state's insurer of last resort, providing basic 
 - [CalFire Damage Inspection Data (DINS)](https://www.fire.ca.gov/)
 - [California FAIR Plan - Key Statistics & Data](https://www.cfpnet.com/key-statistics-data/)
 - [CA Department of Insurance - Wildfire & Insurance Data](https://www.insurance.ca.gov/01-consumers/200-wrr/)
-- [Assembly Standing Committee on Insurance - March 13, 2024]([https://www.insurance.ca.gov/01-consumers/200-wrr/](https://calmatters.digitaldemocracy.org/hearings/257632))
-- [Assembly Standing Committee on Insurance - May 28, 2025]([https://www.insurance.ca.gov/01-consumers/200-wrr/](https://calmatters.digitaldemocracy.org/hearings/259341))
+- [Assembly Standing Committee on Insurance - March 13, 2024](https://calmatters.digitaldemocracy.org/hearings/257632/)
+- [Assembly Standing Committee on Insurance - May 28, 2025](https://calmatters.digitaldemocracy.org/hearings/259341/)
 
 ## Repository Structure
 ```
