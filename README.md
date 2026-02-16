@@ -1,6 +1,6 @@
 # California FAIR Plan Analysis
 
-An independent research project examining the California FAIR Plan's exposure and structural damage across three major wildfires — Eaton, Palisades, and Mosquito. Built with Python, SQL, and interactive geospatial tools using publicly available data from CalFire.
+An independent research project examining the California FAIR Plan's exposure and structural damage across three major wildfires Eaton, Palisades, and Mosquito. Built with Python, SQL, and interactive geospatial tools using publicly available data from CalFire.
 
 ## Interactive Maps
 
